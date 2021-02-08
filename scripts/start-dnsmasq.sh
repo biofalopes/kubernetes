@@ -1,0 +1,22 @@
+docker run -d --rm --cap-add=NET_ADMIN --net=host quay.io/coreos/dnsmasq \
+  -d -q \
+  --enable-tftp --tftp-root=/var/lib/tftpboot \
+  --dhcp-range=10.205.11.121,10.205.11.122 \
+  --dhcp-host=6E:94:26:73:84:2D,10.205.11.121,k8s-1,infinite \
+  --dhcp-host=82:9C:DC:30:16:04,10.205.11.122,k8s-2,infinite \
+  --dhcp-match=set:bios,option:client-arch,0 \
+  --dhcp-boot=tag:bios,undionly.kpxe \
+  --dhcp-match=set:efi32,option:client-arch,6 \
+  --dhcp-boot=tag:efi32,ipxe.efi \
+  --dhcp-match=set:efibc,option:client-arch,7 \
+  --dhcp-boot=tag:efibc,ipxe.efi \
+  --dhcp-match=set:efi64,option:client-arch,9 \
+  --dhcp-boot=tag:efi64,ipxe.efi \
+  --dhcp-userclass=set:ipxe,iPXE \
+  --dhcp-boot=tag:ipxe,http://10.205.11.120:8080/boot.ipxe \
+  --address=/k8s-workbench/10.205.11.120 \
+  --dhcp-option=3,10.205.11.1 \
+  --dhcp-option=6,161.148.1.8 \
+  --dhcp-option=42,200.198.225.79 \
+  --log-queries \
+  --log-dhcp
